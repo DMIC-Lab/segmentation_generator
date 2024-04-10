@@ -778,7 +778,7 @@ def predict_entry_point(i, d, o='', p='nnUNetPlans', tr='nnUNetTrainer', c='nnUN
         "nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. "
         "Nature methods, 18(2), 203-211.\n#######################################################################\n")
 
-    folds = [i if i == 'all' else int(i) for i in f]
+    f = [i if i == 'all' else int(i) for i in f]
 
     # this can be changed so that any folder containing the necessary files can be used
     model_folder = get_output_folder(d, tr, p, c)
@@ -833,7 +833,7 @@ def predict_entry_point(i, d, o='', p='nnUNetPlans', tr='nnUNetTrainer', c='nnUN
     
     return predictor
 
-def predict_using_numpy(i, d, properties=None, o='', p='nnUNetPlans', tr='nnUNetTrainer', c='nnUNetTest', f=(0, 1, 2, 3, 4), step_size=0.5, disable_tta=False, verbose=False, save_probabilities=False, continue_prediction=False, chk='checkpoint_final.pth', npp=3, nps=3, prev_stage_predictions=None, num_parts=1, part_id=0, device='cuda', disable_progress_bar=False):
+def predict_using_numpy(i, d, properties=None, o='', p='nnUNetPlans', tr='nnUNetTrainer', c='nnUNetTest', f=(0, 1, 2, 3, 4), step_size=0.5, disable_tta=False, verbose=False, save_probabilities=False, continue_prediction=False, chk='checkpoint_final.pth', npp=3, nps=3, prev_stage_predictions=None, num_parts=1, part_id=0, device='cuda', disable_progress_bar=True):
 
     print(
         "\n#######################################################################\nPlease cite the following paper "
