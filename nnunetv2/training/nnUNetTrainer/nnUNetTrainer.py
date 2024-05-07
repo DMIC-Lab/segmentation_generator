@@ -407,7 +407,7 @@ class nnUNetTrainer(object):
                 }
             else:
                 rotation_for_DA = {
-                    'x': (-180. / 360 * 2. * np.pi, 180. / 360 * 2. * np.pi),
+                    'x': (0, 0),
                     'y': (0, 0),
                     'z': (0, 0)
                 }
@@ -419,7 +419,7 @@ class nnUNetTrainer(object):
             if do_dummy_2d_data_aug:
                 # why do we rotate 180 deg here all the time? We should also restrict it
                 rotation_for_DA = {
-                    'x': (-180. / 360 * 2. * np.pi, 180. / 360 * 2. * np.pi),
+                    'x': (-15. / 360 * 2. * np.pi, 15. / 360 * 2. * np.pi),
                     'y': (0, 0),
                     'z': (0, 0)
                 }

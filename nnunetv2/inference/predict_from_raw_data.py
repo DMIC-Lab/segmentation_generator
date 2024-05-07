@@ -852,7 +852,6 @@ def predict_using_numpy(i, d, properties=None, o='', p='nnUNetPlans', tr='nnUNet
         temp.append(properties)
     properties = temp
 
-
     # this can be changed so that any folder containing the necessary files can be used
     model_folder = get_output_folder(d, tr, p, c)
 

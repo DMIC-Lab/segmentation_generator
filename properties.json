@@ -1,1 +1,1 @@
-{"sitk_stuff": {"spacing": [1.0, 1.0], "origin": [0.0, 0.0], "direction": [-1.0, 0.0, 0.0, -1.0]}, "spacing": [999.0, 1.0, 1.0], "shape_before_cropping": [1, 256, 256], "bbox_used_for_cropping": [[0, 1], [0, 256], [0, 256]], "shape_after_cropping_and_before_resampling": [1, 256, 256]}
+{"sitk_stuff": {"spacing": [1.0, 1.0], "origin": [0.0, 0.0], "direction": [-1.0, 0.0, 0.0, -1.0]}, "spacing": [999.0, 1.0, 1.0], "shape_before_cropping": [1, 48, 301], "bbox_used_for_cropping": [[0, 1], [0, 48], [0, 301]], "shape_after_cropping_and_before_resampling": [1, 48, 301]}
