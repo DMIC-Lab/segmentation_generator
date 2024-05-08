@@ -665,8 +665,9 @@ class nnUNetPredictor(object):
             mask = self.queue.get()
             temp.append(mask)
         self.sorted_name = sorted(temp, key=lambda x: int(x['output_file']))
-        masks = np.concatenate([m['segmentation'] for m in self.sorted_name], axis=0)
-        masks = np.expand_dims(masks, axis=1)
+        masks = []
+        for m in self.sorted_name:
+            masks.append(m['segmentation'])
         return masks
     
     def grab_raw_images(self):
