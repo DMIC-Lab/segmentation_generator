@@ -302,7 +302,9 @@ def preprocessing_iterator_fromnpy(list_of_images: List[np.ndarray],
                          abort_event,
                          verbose
                      ), daemon=True)
+        print("received pr")
         pr.start()
+        print("completed preprocessing")
         done_events.append(event)
         processes.append(pr)
         target_queues.append(queue)
@@ -324,3 +326,4 @@ def preprocessing_iterator_fromnpy(list_of_images: List[np.ndarray],
             [i.pin_memory() for i in item.values() if isinstance(i, torch.Tensor)]
         yield item
     [p.join() for p in processes]
+    print("made it through preprocessing")

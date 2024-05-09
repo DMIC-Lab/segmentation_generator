@@ -347,6 +347,7 @@ class nnUNetPredictor(object):
                                                             properties_or_list_of_properties,
                                                             truncated_ofname,
                                                             num_processes)
+        print("initialized data iterator.")
         return self.predict_from_data_iterator(iterator, save_probabilities, num_processes_segmentation_export)
 
     def predict_from_data_iterator(self,
@@ -357,11 +358,13 @@ class nnUNetPredictor(object):
         each element returned by data_iterator must be a dict with 'data', 'ofile' and 'data_properties' keys!
         If 'ofile' is None, the result will be returned instead of written to a file
         """
+        print("iterating over data")
         with multiprocessing.get_context("spawn").Pool(num_processes_segmentation_export) as export_pool:
             worker_list = [i for i in export_pool._pool]
             r = []
             for preprocessed in data_iterator:
                 data = preprocessed['data']
+                print("data shape:", data.shape)
                 if isinstance(data, str):
                     delfile = data
                     data = torch.from_numpy(np.load(data))
@@ -835,7 +838,8 @@ def predict_entry_point(i, d, o='', p='nnUNetPlans', tr='nnUNetTrainer', c='nnUN
     return predictor
 
 def predict_using_numpy(i, d, properties=None, o='', p='nnUNetPlans', tr='nnUNetTrainer', c='nnUNetTest', f=(0, 1, 2, 3, 4), step_size=0.5, disable_tta=False, verbose=False, save_probabilities=False, continue_prediction=False, chk='checkpoint_final.pth', npp=3, nps=3, prev_stage_predictions=None, num_parts=1, part_id=0, device='cuda', disable_progress_bar=True):
-
+    original_stdout = sys.stdout
+    sys.stdout = open(os.devnull, 'w')
     print(
         "\n#######################################################################\nPlease cite the following paper "
         "when using nnU-Net:\n"
@@ -844,17 +848,20 @@ def predict_using_numpy(i, d, properties=None, o='', p='nnUNetPlans', tr='nnUNet
         "Nature methods, 18(2), 203-211.\n#######################################################################\n")
     global threads_set
 
-    original_stdout = sys.stdout
-    sys.stdout = open(os.devnull, 'w')
     folds = [i if i == 'all' else int(i) for i in f]
     files_num = len(i)
     temp = []
     for j in range(files_num):
-        temp.append(properties)
+        if c == '3d_fullres':
+            temp.append({'spacing': [1.0, 1.0, 1.0]})
+        else:
+            temp.append({'spacing': [999.0, 1.0, 1.0]})
     properties = temp
 
     # this can be changed so that any folder containing the necessary files can be used
+    print("appended properties")
     model_folder = get_output_folder(d, tr, p, c)
+    print("accessed model folder")
 
     # slightly passive aggressive haha
     assert part_id < num_parts, 'Do you even read the documentation? See nnUNetv2_predict -h.'
@@ -872,10 +879,10 @@ def predict_using_numpy(i, d, properties=None, o='', p='nnUNetPlans', tr='nnUNet
             torch.set_num_threads(1)
             torch.set_num_interop_threads(1)
             threads_set = True
-        device = torch.device('cuda')
+        device = torch.device('cuda:1')
     else:
         device = torch.device('mps')
-
+    print("device set")
     predictor = nnUNetPredictor(tile_step_size=step_size,
                                 use_gaussian=True,
                                 use_mirroring=not disable_tta,
