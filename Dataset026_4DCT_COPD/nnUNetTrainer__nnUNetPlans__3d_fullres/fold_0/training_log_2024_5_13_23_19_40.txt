@@ -1,0 +1,82 @@
+
+#######################################################################
+Please cite the following paper when using nnU-Net:
+Isensee, F., Jaeger, P. F., Kohl, S. A., Petersen, J., & Maier-Hein, K. H. (2021). nnU-Net: a self-configuring method for deep learning-based biomedical image segmentation. Nature methods, 18(2), 203-211.
+#######################################################################
+ 
+
+This is the configuration used by this training:
+Configuration name: 3d_fullres
+ {'data_identifier': 'nnUNetPlans_3d_fullres', 'preprocessor_name': 'DefaultPreprocessor', 'batch_size': 2, 'patch_size': [48, 192, 256], 'median_image_size_in_voxels': [46.0, 199.0, 272.0], 'spacing': [1.0, 1.0, 1.0], 'normalization_schemes': ['CTNormalization'], 'use_mask_for_norm': [False], 'resampling_fn_data': 'resample_data_or_seg_to_shape', 'resampling_fn_seg': 'resample_data_or_seg_to_shape', 'resampling_fn_data_kwargs': {'is_seg': False, 'order': 3, 'order_z': 0, 'force_separate_z': None}, 'resampling_fn_seg_kwargs': {'is_seg': True, 'order': 1, 'order_z': 0, 'force_separate_z': None}, 'resampling_fn_probabilities': 'resample_data_or_seg_to_shape', 'resampling_fn_probabilities_kwargs': {'is_seg': False, 'order': 1, 'order_z': 0, 'force_separate_z': None}, 'architecture': {'network_class_name': 'dynamic_network_architectures.architectures.unet.PlainConvUNet', 'arch_kwargs': {'n_stages': 6, 'features_per_stage': [32, 64, 128, 256, 320, 320], 'conv_op': 'torch.nn.modules.conv.Conv3d', 'kernel_sizes': [[3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3], [3, 3, 3]], 'strides': [[1, 1, 1], [2, 2, 2], [2, 2, 2], [2, 2, 2], [1, 2, 2], [1, 2, 2]], 'n_conv_per_stage': [2, 2, 2, 2, 2, 2], 'n_conv_per_stage_decoder': [2, 2, 2, 2, 2], 'conv_bias': True, 'norm_op': 'torch.nn.modules.instancenorm.InstanceNorm3d', 'norm_op_kwargs': {'eps': 1e-05, 'affine': True}, 'dropout_op': None, 'dropout_op_kwargs': None, 'nonlin': 'torch.nn.LeakyReLU', 'nonlin_kwargs': {'inplace': True}, 'deep_supervision': True}, '_kw_requires_import': ['conv_op', 'norm_op', 'dropout_op', 'nonlin']}, 'batch_dice': False} 
+ 
+These are the global plan.json settings:
+ {'dataset_name': 'Dataset026_4DCT_COPD', 'plans_name': 'nnUNetPlans', 'original_median_spacing_after_transp': [1.0, 1.0, 1.0], 'original_median_shape_after_transp': [46, 199, 272], 'image_reader_writer': 'SimpleITKIO', 'transpose_forward': [0, 1, 2], 'transpose_backward': [0, 1, 2], 'experiment_planner_used': 'ExperimentPlanner', 'label_manager': 'LabelManager', 'foreground_intensity_properties_per_channel': {'0': {'max': 1.0, 'mean': 0.4889247314212493, 'median': 0.519193708896637, 'min': 0.0, 'percentile_00_5': 0.07972602345049382, 'percentile_99_5': 0.9135997974872581, 'std': 0.15509812974228585}}} 
+ 
+2024-05-13 23:19:44.633078: unpacking dataset... 
+2024-05-13 23:19:50.918238: unpacking done... 
+2024-05-13 23:19:50.919759: do_dummy_2d_data_aug: True 
+2024-05-13 23:19:50.972109: Using splits from existing split file: /raid/dataset/nnUNet_preprocessed/Dataset026_4DCT_COPD/splits_final.json 
+2024-05-13 23:19:50.978747: The split file contains 5 splits. 
+2024-05-13 23:19:50.979292: Desired fold for training: 0 
+2024-05-13 23:19:50.979731: This split has 6068 training and 1517 validation cases. 
+2024-05-13 23:19:51.261549: Unable to plot network architecture: 
+2024-05-13 23:19:51.261696: No module named 'hiddenlayer' 
+2024-05-13 23:19:51.367115:  
+2024-05-13 23:19:51.367222: Epoch 850 
+2024-05-13 23:19:51.367369: Current learning rate: 0.00181 
+2024-05-13 23:20:46.067339: train_loss -0.6353 
+2024-05-13 23:20:46.067601: val_loss -0.6036 
+2024-05-13 23:20:46.067679: Pseudo dice [0.9084] 
+2024-05-13 23:20:46.067770: Epoch time: 54.7 s 
+2024-05-13 23:20:47.599458:  
+2024-05-13 23:20:47.599645: Epoch 851 
+2024-05-13 23:20:47.599765: Current learning rate: 0.0018 
+2024-05-13 23:21:32.111705: train_loss -0.6784 
+2024-05-13 23:21:32.112993: val_loss -0.5996 
+2024-05-13 23:21:32.113299: Pseudo dice [0.9109] 
+2024-05-13 23:21:32.113665: Epoch time: 44.51 s 
+2024-05-13 23:21:34.401549:  
+2024-05-13 23:21:34.402172: Epoch 852 
+2024-05-13 23:21:34.402746: Current learning rate: 0.00179 
+2024-05-13 23:22:18.446285: train_loss -0.665 
+2024-05-13 23:22:18.447072: val_loss -0.6616 
+2024-05-13 23:22:18.447662: Pseudo dice [0.9183] 
+2024-05-13 23:22:18.448233: Epoch time: 44.05 s 
+2024-05-13 23:22:20.417529:  
+2024-05-13 23:22:20.418382: Epoch 853 
+2024-05-13 23:22:20.419133: Current learning rate: 0.00178 
+2024-05-13 23:23:05.340699: train_loss -0.6831 
+2024-05-13 23:23:05.340962: val_loss -0.6246 
+2024-05-13 23:23:05.341036: Pseudo dice [0.918] 
+2024-05-13 23:23:05.341110: Epoch time: 44.92 s 
+2024-05-13 23:23:07.264987:  
+2024-05-13 23:23:07.265447: Epoch 854 
+2024-05-13 23:23:07.265782: Current learning rate: 0.00177 
+2024-05-13 23:23:51.051581: train_loss -0.6674 
+2024-05-13 23:23:51.052185: val_loss -0.6716 
+2024-05-13 23:23:51.052504: Pseudo dice [0.9191] 
+2024-05-13 23:23:51.052819: Epoch time: 43.79 s 
+2024-05-13 23:23:52.962320:  
+2024-05-13 23:23:52.962758: Epoch 855 
+2024-05-13 23:23:52.963104: Current learning rate: 0.00176 
+2024-05-13 23:24:36.587106: train_loss -0.6659 
+2024-05-13 23:24:36.587476: val_loss -0.572 
+2024-05-13 23:24:36.587554: Pseudo dice [0.9157] 
+2024-05-13 23:24:36.587634: Epoch time: 43.63 s 
+2024-05-13 23:24:38.444633:  
+2024-05-13 23:24:38.450611: Epoch 856 
+2024-05-13 23:24:38.450821: Current learning rate: 0.00175 
+2024-05-13 23:25:21.792531: train_loss -0.6757 
+2024-05-13 23:25:21.792894: val_loss -0.7058 
+2024-05-13 23:25:21.792977: Pseudo dice [0.9179] 
+2024-05-13 23:25:21.793049: Epoch time: 43.35 s 
+2024-05-13 23:25:23.678712:  
+2024-05-13 23:25:23.679369: Epoch 857 
+2024-05-13 23:25:23.679955: Current learning rate: 0.00174 
+2024-05-13 23:26:07.662359: train_loss -0.6526 
+2024-05-13 23:26:07.662862: val_loss -0.6353 
+2024-05-13 23:26:07.663153: Pseudo dice [0.9154] 
+2024-05-13 23:26:07.663434: Epoch time: 43.99 s 
+2024-05-13 23:26:10.060803:  
+2024-05-13 23:26:10.061089: Epoch 858 
+2024-05-13 23:26:10.061272: Current learning rate: 0.00173 
