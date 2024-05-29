@@ -10,7 +10,7 @@ class SwinUNETRMaskGen:
         weights_path (str): Path to the model weights.
         device (str): Device to run the model on ('cuda' or 'cpu').
         """
-        self.weights = torch.load(weights_path)
+        self.weights = torch.load(weights_path, map_location=device)
         self.model = self.weights['model_arch']
         self.model.load_state_dict(self.weights['model_state_dict'])
         self.model.to(device)
@@ -29,9 +29,9 @@ class SwinUNETRMaskGen:
         numpy.ndarray: Processed mask.
         numpy.ndarray: Model output.
         """
-        self.max_x = 32
+        self.max_x = 64
         self.max_y = 160
-        self.max_z = 256
+        self.max_z = 192
 
         min_x, min_y, min_z, max_x, max_y, max_z = self._get_roi_bounds(roi)
         reconstruct_pad = self._calculate_padding(img, min_x, max_x, min_y, max_y, min_z, max_z)
@@ -43,8 +43,10 @@ class SwinUNETRMaskGen:
         self.model.eval()
         with torch.no_grad():
             out = self.model(img.unsqueeze(0).unsqueeze(0).to(self.device))
+            if type(out) == tuple:
+                out = out[0]
             out = torch.sigmoid(out)
-        
+
         out_mask = self._threshold_output(out, thresh=0.65)
         out_mask = self._reconstruct_padded_output(out_mask, reconstruct_pad)
         
@@ -65,20 +67,24 @@ class SwinUNETRMaskGen:
         
         # possibly multithread this to use 128 threads????
         for i in range(3):
-            if ((roi.shape[i] - min_coords[i]) - (roi.shape[i] - max_coords[i]) ) < (32, 160, 256)[i]:
-                if roi.shape[i] < (32, 160, 256)[i]:
-                    min_coords[i] = 0
+            if ((roi.shape[i] - min_coords[i]) - (roi.shape[i] - max_coords[i]) ) < (64, 160, 192)[i]:
+                if roi.shape[i] < (64, 160, 192)[i]:
                     max_coords[i] = roi.shape[i] - roi.shape[i] % 32
+                    # come back to this. can be improved to better capture roi
+                    if i == 0:
+                        self.max_x = (64 + min_coords[i])
+                        max_coords[i] = self.max_x
                     if i == 1:
                         self.max_y = roi.shape[i] - roi.shape[i] % 32
+                        max_coords[i] = self.max_y
                     elif i == 2:
                         self.max_z = roi.shape[i] - roi.shape[i] % 32
+                        max_coords[i] = self.max_z
                     else:
                         raise ValueError("Invalid dimension size.")
                     
-                    continue
-                min_coords[i] = (roi.shape[i] - (32, 160, 256)[i]) // 2
-                max_coords[i] = roi.shape[i] - ((roi.shape[i] - (32, 160, 256)[i]) // 2) 
+                min_coords[i] = (roi.shape[i] - (64, 160, 192)[i]) // 2
+                max_coords[i] = roi.shape[i] - ((roi.shape[i] - (64, 160, 192)[i]) // 2) 
 
         return (*min_coords, *max_coords)
     
@@ -187,7 +193,7 @@ class SwinUNETRMaskGen:
         Returns:
         numpy.ndarray: Thresholded output.
         """
-        return (out > thresh)[0, 1].cpu().numpy()
+        return (out > thresh)[0, 0].cpu().numpy()
     
     def _reconstruct_padded_output(self, out_mask, reconstruct_pad):
         """
